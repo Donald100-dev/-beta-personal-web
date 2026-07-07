@@ -1,0 +1,257 @@
+:root {
+  --bg: #000;
+  --ink: #fff;
+  --thumb: #5a5a5a;
+  --end-thumb: #333;
+  --end-ink: #777;
+
+  --hero-ratio: 0.6;
+  --card-radius: 8px;
+  --card-width: 240px;
+  --card-gap: 32px;
+  --fade-width: 60px;
+
+  --mobile-breakpoint: 640px; /* dưới ngưỡng này -> đổi hẳn sang bố cục điện thoại */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  height: 100%;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- khối 1: chỉ còn chữ Huy ---- */
+.hero {
+  height: min(calc(var(--hero-ratio) * 100vh), 100vw);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.name {
+  font-size: clamp(2rem, 12vw, 7rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ---- khối 2: Blog + carousel, xếp dọc trong cùng 1 khối ---- */
+.feed {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.feed-track-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-height: 0;
+}
+
+.feed-track {
+  width: 90%;
+  max-width: calc((3 * var(--card-width)) + (2 * var(--card-gap)));
+  display: flex;
+  gap: var(--card-gap);
+  padding: 20px 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black var(--fade-width), black calc(100% - var(--fade-width)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black var(--fade-width), black calc(100% - var(--fade-width)), transparent 100%);
+}
+
+.feed-track::-webkit-scrollbar { display: none; }
+.feed-track { scrollbar-width: none; }
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex: 0 0 var(--card-width);
+  scroll-snap-align: center;
+}
+
+.card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.25s ease;
+  transform-origin: center;
+}
+
+.card-thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--thumb);
+  border-radius: var(--card-radius);
+  background-size: cover;
+  background-position: center;
+}
+
+.card-caption {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #d8d8d8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 2px;
+  min-height: 1.2em; /* giữ chiều cao cố định kể cả khi không có chữ (2 thẻ đệm) */
+}
+
+/* ---- 2 thẻ đệm ở đầu/cuối, không có tiêu đề ---- */
+.card--end .card-thumb {
+  background: var(--end-thumb);
+  color: var(--end-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   BỐ CỤC ĐIỆN THOẠI (màn hẹp) — 2 trang riêng, chốt khi vuốt dọc
+   Lưu ý: media query không đọc được biến --mobile-breakpoint,
+   nên số 640px dưới đây phải sửa tay nếu muốn đổi ngưỡng,
+   khớp với giá trị khai báo ở --mobile-breakpoint phía trên.
+   ============================================================ */
+
+.layout-mobile { display: none; }
+
+@media (max-width: 640px) {
+
+  .layout-desktop { display: none; }
+
+  .layout-mobile {
+    display: block;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
+  .mobile-page {
+    min-height: 100vh;
+    scroll-snap-align: start;
+  }
+
+  /* trang 1: chỉ có Huy */
+  .mobile-page--hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .mobile-page--hero .name {
+    font-size: clamp(2.5rem, 16vw, 5rem);
+  }
+  .mobile-page--hero .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--ink);
+    opacity: 0.85;
+    animation: hint-bounce 1.8s ease-in-out infinite;
+  }
+  @keyframes hint-bounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 8px); }
+  }
+
+  /* trang 2: khối "stories" cố định + danh sách story tự chốt từng cái */
+  .mobile-page--stories {
+    height: 100vh;         /* cố định đúng 1 màn hình, không cho phép cao hơn */
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;      /* chỉ .mobile-list bên trong được cuộn, trang này thì không */
+  }
+
+  .mobile-stories-header {
+    flex-shrink: 0;        /* không bao giờ co lại hay biến mất */
+    padding: 32px 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-stories-title {
+    font-size: 2rem;
+    font-weight: 800;
+  }
+
+  .mobile-list {
+    flex: 1;                         /* chiếm hết phần còn lại sau khối header */
+    min-height: 0;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;   /* mỗi story tự chốt khi vuốt, kiểu TikTok */
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
+    padding: 0 6% 8px;
+    -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 100px), transparent 100%);
+    mask-image: linear-gradient(to bottom, black calc(100% - 100px), transparent 100%);
+  }
+  .mobile-list::-webkit-scrollbar { display: none; }
+  .mobile-list { scrollbar-width: none; }
+
+  .mobile-story-link {
+    scroll-snap-align: start;
+    scroll-snap-stop: always; /* vuốt mạnh cũng chỉ đi đúng 1 story kế tiếp, không nhảy cóc */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;                /* khoảng cách thumbnail <-> chữ mô tả, giữ nguyên không đổi */
+    text-decoration: none;
+    color: inherit;
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* vách ngăn giữa 2 story */
+  }
+  .mobile-story-link:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none; /* story cuối (thẻ đệm ?) không cần vách ngăn phía sau */
+  }
+
+  .mobile-story-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--thumb);
+    border-radius: var(--card-radius);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .mobile-story-caption {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f0f0f0;
+  }
+
+  /* thẻ đệm cuối danh sách - giống bên carousel máy tính */
+  .mobile-story-thumb--end {
+    background: var(--end-thumb);
+    color: var(--end-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+}

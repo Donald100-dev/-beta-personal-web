@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Huy Blog</title>
+  <link rel="stylesheet" href="/frontend/layout.css">
+</head>
+<body>
+
+  <!-- BỐ CỤC MÁY TÍNH / MÀN RỘNG: 1 trang, Huy + carousel ngang -->
+  <div class="layout-desktop">
+    <section class="hero">
+      <h1 class="name">Huy</h1>
+    </section>
+
+    <section class="feed">
+      <div class="feed-track-wrap">
+        <div class="feed-track" id="feedTrack">
+          <!-- Dữ liệu bài viết từ blog.db sẽ được tự động vẽ vào đây -->
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- BỐ CỤC ĐIỆN THOẠI / MÀN HẸP: 2 trang, chốt khi vuốt dọc -->
+  <div class="layout-mobile">
+    <section class="mobile-page mobile-page--hero">
+      <h1 class="name">Huy</h1>
+      <div class="scroll-hint">
+        <svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 2L14 14L26 2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="mobile-page mobile-page--stories">
+      <div class="mobile-stories-header">
+        <h2 class="mobile-stories-title">stories</h2>
+      </div>
+      <div class="mobile-list" id="mobileStoriesList">
+        <!-- Dữ liệu bài viết sẽ được tự động vẽ vào đây -->
+      </div>
+    </section>
+  </div>
+
+  <script src="/frontend/carousel.js"></script>
+</body>
+</html>
