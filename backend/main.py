@@ -28,7 +28,7 @@ def get_db():
 
 @app.get("/")
 def read_root():
-    return FileResponse("../frontend/index.html")
+    return FileResponse("frontend/index.html")
 
 @app.get("/api/stories")
 def get_stories(db: Session = Depends(get_db)):
