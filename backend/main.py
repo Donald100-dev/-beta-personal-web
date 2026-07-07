@@ -4,7 +4,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
-import database
+import os
+from backend import database
 
 app = FastAPI()
 
@@ -15,7 +16,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/frontend", StaticFiles(directory="../frontend"), name="frontend")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app.mount("/frontend", StaticFiles(directory=os.path.join(BASE_DIR, "..", "frontend")), name="frontend")
 
 def get_db():
     db = next(database.get_db_session())
